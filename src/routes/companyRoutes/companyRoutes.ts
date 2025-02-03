@@ -1,11 +1,11 @@
 import express from "express";
 import {
   Create_Company,
+  Delect_Company,
   Get_Companes,
   Get_Single_Company,
   Update_Company,
 } from "../../controllers/companyControllers/companyControllers";
-import { Delect_Company } from "../../controllers/productControllers/productControllers";
 
 const companyRoutes = express.Router();
 

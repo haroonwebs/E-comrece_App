@@ -188,3 +188,41 @@ export const Update_Company = async (
     });
   }
 };
+
+// delete controller to delete company
+
+export const Delect_Company = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { companyId } = req.params as any;
+    if (!companyId) {
+      return res.status(404).json({
+        success: false,
+        message: "please provide company id to delete",
+      });
+    }
+    const companyRepo = AppDataSource.getRepository(Company);
+    const deleted_comapny = await companyRepo
+      .createQueryBuilder()
+      .delete()
+      .where("id= :companyId", { companyId })
+      .execute();
+    if (deleted_comapny.affected === 0) {
+      return res.status(409).json({
+        success: false,
+        message: "Some thing went wrong while deleting company!",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Company Deleted Successfuly !",
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: `Internal server error: ${error}`,
+    });
+  }
+};
