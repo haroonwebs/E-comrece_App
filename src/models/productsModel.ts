@@ -5,10 +5,12 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  Timestamp,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
 import { Company } from "./companyModel";
-import { timeStamp } from "console";
+import { Photo } from "./porduct_photoModel";
+import { PathToFileUrlOptions } from "url";
 
 @Entity()
 export class Product {
@@ -28,6 +30,10 @@ export class Product {
     onDelete: "CASCADE",
   })
   company!: Company;
+
+  @OneToOne(() => Photo)
+  @JoinColumn()
+  photo!: Photo;
 
   @CreateDateColumn()
   created_at: Date | undefined;

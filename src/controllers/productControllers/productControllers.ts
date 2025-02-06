@@ -4,6 +4,8 @@ import Joi from "joi";
 import { ProdcutType } from "./productTypes";
 import { Product } from "../../models/productsModel";
 import { Company } from "../../models/companyModel";
+import { Photo } from "../../models/porduct_photoModel";
+import { Upload_On_Cloudinary } from "../../services/cloudinary";
 
 const Product_Schema = Joi.object({
   name: Joi.string().min(5).max(50).required(),
@@ -42,13 +44,28 @@ export const Create_Product = async (
       });
     }
 
+    const Photo_file = req.file;
+    let Img_Url: string | undefined;
+
+    if (Photo_file) {
+      const Upload_Response = await Upload_On_Cloudinary(Photo_file.path);
+      if (Upload_Response) {
+        Img_Url = Upload_Response.url;
+      }
+    }
+
     const ProductRepositery = AppDataSource.getRepository(Product);
+    const photoRepositery = AppDataSource.getRepository(Photo);
+
+    const product_img = photoRepositery.create({ photo_url: Img_Url });
+    await photoRepositery.save(product_img);
 
     New_Product = ProductRepositery.create({
       name,
       description,
       price,
       company: Exist_Company,
+      photo: product_img,
     });
     if (!New_Product) {
       return res.status(400).json({

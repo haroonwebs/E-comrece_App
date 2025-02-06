@@ -6,10 +6,11 @@ import {
   Product_By_Id,
   Update_Product,
 } from "../../controllers/productControllers/productControllers";
+import { upload } from "../../middlewares/multer_middleware";
 
 const productRoute = express.Router();
 
-productRoute.post("/create", Create_Product);
+productRoute.post("/create", upload.single("Photo_file"), Create_Product);
 productRoute.get("/getall", All_Products);
 productRoute.get("/:productId", Product_By_Id);
 productRoute.delete("/delete/:productId", Delete_Product);
