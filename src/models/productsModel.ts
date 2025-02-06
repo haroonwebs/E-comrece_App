@@ -10,7 +10,6 @@ import {
 } from "typeorm";
 import { Company } from "./companyModel";
 import { Photo } from "./porduct_photoModel";
-import { PathToFileUrlOptions } from "url";
 
 @Entity()
 export class Product {
@@ -31,7 +30,7 @@ export class Product {
   })
   company!: Company;
 
-  @OneToOne(() => Photo)
+  @OneToOne(() => Photo, { cascade: true, onDelete: "CASCADE" })
   @JoinColumn()
   photo!: Photo;
 

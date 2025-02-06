@@ -99,18 +99,44 @@ export const All_Products = async (
     let products;
     let totalCount;
     if (pageNo) {
-      const limit = 8;
-      const skip = (pageNo - 1) * 8;
+      const limit = 4;
+      const skip = (pageNo - 1) * 4;
       [products, totalCount] = await productRepositery
         .createQueryBuilder("product")
         .innerJoinAndSelect("product.company", "company")
+        .leftJoinAndSelect("product.photo", "img")
+        .select([
+          "product",
+          "company.id",
+          "company.name",
+          "company.description",
+          "img.photo_url",
+        ])
         .take(limit)
         .skip(skip)
+        .orderBy("product.id", "ASC")
         .getManyAndCount();
     } else {
       products = await productRepositery.find({
         relations: {
           company: true,
+          photo: true,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          company: {
+            id: true,
+            name: true,
+          },
+          photo: {
+            photo_url: true,
+          },
+        },
+        order: {
+          id: "ASC",
         },
       });
     }

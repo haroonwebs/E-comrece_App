@@ -9,7 +9,6 @@ import {
 import { upload } from "../../middlewares/multer_middleware";
 
 const productRoute = express.Router();
-
 productRoute.post("/create", upload.single("Photo_file"), Create_Product);
 productRoute.get("/getall", All_Products);
 productRoute.get("/:productId", Product_By_Id);
